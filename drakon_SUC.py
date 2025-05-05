@@ -1,6 +1,11 @@
 from PyQt5.QtWidgets import (QApplication, QGraphicsView, QGraphicsScene, 
                            QMainWindow)
 from PyQt5.QtCore import QRectF
+import sys
+if sys.platform == 'win32':
+    # Windows-specific adjustments
+    from ctypes import windll
+    windll.shcore.SetProcessDpiAwareness(1)  # Для правильного масштабирования
 
 def create_process(x, y, width, height, text, scene):
     """Создает прямоугольник процесса"""
@@ -19,7 +24,7 @@ def main():
     
     # Создаем главное окно
     window = QMainWindow()
-    window.setWindowTitle("DRAKON Editor")
+    window.setWindowTitle("DRAKON SUC")
     window.resize(800, 600)
     
     # Создаем графическую сцену

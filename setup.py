@@ -13,9 +13,9 @@ OPTIONS = {
     'excludes': ['Carbon'],
     'packages': ['PyQt5'],
     'plist': {
-        'CFBundleName': "DRAKON Editor",
-        'CFBundleDisplayName': "DRAKON Editor",
-        'CFBundleIdentifier': "com.yourcompany.drakon-editor",
+        'CFBundleName': "DRAKON_SUC",
+        'CFBundleDisplayName': "DRAKON_SUC",
+        'CFBundleIdentifier': "com.yourcompany.drakon_suc",
     }
 }
 
