@@ -1,0 +1,32 @@
+# Файлы Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Виртуальное окружение
+venv/
+
+# Файлы сборки и дистрибуции
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Файлы IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Файлы операционной системы
+.DS_Store
+Thumbs.db
+
+# Файлы настроек
+*.ini
+*.cfg
+*.conf
+
+# Логи и временные файлы
+*.log
+*.tmp
