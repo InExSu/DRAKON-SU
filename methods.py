@@ -54,4 +54,54 @@ def file_Choice(files_Opened):
     button_group.buttonClicked[int].connect(button_clicked)
     
     dialog.exec_()
+    
     return result
+
+def create_process(x, y, width, height, text, scene):
+    """Создает прямоугольник процесса"""
+    rect = scene.addRect(QRectF(x, y, width, height))
+    text_item = scene.addText(text)
+    text_item.setPos(x + 10, y + 10)
+    return rect
+
+def create_condition(x, y, size, text, scene):
+    from PyQt5.QtWidgets import QGraphicsPolygonItem
+    from PyQt5.QtCore import QPointF
+    
+    # Создаем точки ромба
+    points = [
+        QPointF(x, y - size/2),       # верхняя
+        QPointF(x + size/2, y),       # правая
+        QPointF(x, y + size/2),       # нижняя
+        QPointF(x - size/2, y)        # левая
+    ]
+    
+    # Создаем и добавляем ромб на сцену
+    diamond = QGraphicsPolygonItem()
+    diamond.setPolygon(points)
+    scene.addItem(diamond)
+    
+    # Добавляем текст
+    text_item = scene.addText(text)
+    text_item.setPos(x - text_item.boundingRect().width()/2, 
+                    y - text_item.boundingRect().height()/2)
+    
+    return diamond
+
+def create_main_window():
+    """Создает и настраивает главное окно приложения"""
+    window = QMainWindow()
+    window.setWindowTitle("DRAKON SUC")
+    window.resize(800, 600)
+    
+    # Создаем графическую сцену и представление
+    scene = QGraphicsScene()
+    view = QGraphicsView(scene)
+    window.setCentralWidget(view)
+    
+    return window, scene
+
+def code_Good(s_Code):
+    """Проверяет код на корректность"""
+    # TODO : реализовать
+    return True

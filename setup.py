@@ -8,20 +8,23 @@ OPTIONS = {
         'PyQt5.QtCore', 
         'PyQt5.QtWidgets', 
         'PyQt5.QtGui',
-        'jaraco.text'  # Добавляем явное указание модуля
+        'jaraco.text'
     ],
     'excludes': ['Carbon'],
     'packages': ['PyQt5'],
     'plist': {
         'CFBundleName': "DRAKON_SUC",
         'CFBundleDisplayName': "DRAKON_SUC",
-        'CFBundleIdentifier': "com.yourcompany.drakon_suc",
+        'CFBundleIdentifier': "com.yourcompany.drakon-suc",
     }
 }
+
+# Используем современный подход без fetch_build_eggs
+setup_requires = ['py2app']
 
 setup(
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
-    setup_requires=['py2app'],
+    setup_requires=setup_requires,
 )

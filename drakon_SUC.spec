@@ -21,7 +21,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='drakon_SUC',
+    name='DRAKON_SUC',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -32,7 +32,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['app_icon.ico'],
 )
 coll = COLLECT(
     exe,
@@ -41,11 +40,11 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='drakon_SUC',
+    name='DRAKON_SUC',
 )
 app = BUNDLE(
     coll,
-    name='drakon_SUC.app',
-    icon='app_icon.ico',
+    name='DRAKON_SUC.app',
+    icon=None,
     bundle_identifier=None,
 )

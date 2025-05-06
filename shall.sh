@@ -9,10 +9,13 @@ python3 /Users/michaelpopov/Documents/GitHub/DRAKON-SUC/drakon_SUC.py
 ./run.sh
 
 # Собрать приложение 
-python3 setup.py py2app
+# python3 setup.py py2app
+# python3 setup.py py2app --debug
+pyinstaller --windowed --onedir --name "DRAKON_SUC" drakon_SUC.py --noconfirm
 
 # запустить через терминал для получения подробного лога ошибок:
-/Users/michaelpopov/Documents/GitHub/DRAKON-SUC/dist/DRAKON\ SUC.app/Contents/MacOS/DRAKON\ SUC
+/Users/michaelpopov/Documents/GitHub/DRAKON-SUC/dist/DRAKON_SUC.app/Contents/MacOS/DRAKON_SUC
 
 # запускать приложение
-open /Users/michaelpopov/Documents/GitHub/DRAKON-SUC/dist/DRAKON_SUC.app
+# open /Users/michaelpopov/Documents/GitHub/DRAKON-SUC/dist/DRAKON_SUC.app
+open dist/DRAKON_SUC.app
