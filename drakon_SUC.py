@@ -7,6 +7,8 @@ if sys.platform == 'win32':
     from ctypes import windll
     windll.shcore.SetProcessDpiAwareness(1)  # Для правильного масштабирования
 
+import methods
+
 def create_process(x, y, width, height, text, scene):
     """Создает прямоугольник процесса"""
     rect = scene.addRect(QRectF(x, y, width, height))
@@ -29,13 +31,16 @@ def main():
     
     # Создаем графическую сцену
     scene = QGraphicsScene()
-    view = QGraphicsView(scene)
+    view  = QGraphicsView(scene)
     window.setCentralWidget(view)
     
     # Добавляем тестовый элемент DRAKON
-    create_process(50, 50, 200, 100, "Пример процесса", scene)
+    # create_process(50, 50, 200, 100, "Пример процесса", scene)
     
     window.show()
+    
+    methods.file_Choice([])
+    
     app.exec_()
 
 if __name__ == "__main__":

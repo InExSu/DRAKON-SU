@@ -1,0 +1,154 @@
+{
+    "items": {
+        "1": {
+            "type": "end"
+        },
+        "2": {
+            "type": "branch",
+            "branchId": 1,
+            "one": "38",
+            "content": "<p>Начало</p>"
+        },
+        "3": {
+            "type": "question",
+            "content": "<p>Параметр есть</p>",
+            "one": "39",
+            "two": "23",
+            "flag1": 1
+        },
+        "9": {
+            "type": "branch",
+            "content": "<p>Выход</p>",
+            "one": "1",
+            "branchId": 11
+        },
+        "10": {
+            "type": "branch",
+            "content": "<p>Обработка нажатий мыши и клавы</p>",
+            "one": "9",
+            "branchId": 10
+        },
+        "12": {
+            "type": "branch",
+            "branchId": 6,
+            "content": "<p>Файла нет</p>",
+            "one": "21"
+        },
+        "13": {
+            "type": "branch",
+            "branchId": 7,
+            "content": "<p>Код диаграммы плохой</p>",
+            "one": "26"
+        },
+        "15": {
+            "type": "branch",
+            "branchId": 8,
+            "content": "<p>Файл создать</p>",
+            "one": "31"
+        },
+        "17": {
+            "type": "branch",
+            "branchId": 5,
+            "content": "<p>Файл существует</p>",
+            "one": "19"
+        },
+        "18": {
+            "type": "branch",
+            "branchId": 4,
+            "content": "<p>Файл открыть</p>",
+            "one": "20"
+        },
+        "19": {
+            "type": "action",
+            "content": "<p>Считать файл в переменную</p>",
+            "one": "22"
+        },
+        "20": {
+            "type": "question",
+            "content": "<p>Файл существует</p>",
+            "one": "17",
+            "two": "12",
+            "flag1": 1
+        },
+        "21": {
+            "type": "action",
+            "content": "<p>Сообщение \"Файл не существует\"</p>",
+            "one": "23"
+        },
+        "22": {
+            "type": "question",
+            "content": "<p>Код диаграммы хороший</p>",
+            "one": "31",
+            "two": "13",
+            "flag1": 1
+        },
+        "23": {
+            "type": "branch",
+            "branchId": 2,
+            "content": "<p>Файл выбрать</p>",
+            "one": "32"
+        },
+        "26": {
+            "type": "action",
+            "content": "<p>Сообщение \"Код диаграммы плохой\":</p>",
+            "one": "23"
+        },
+        "31": {
+            "type": "branch",
+            "branchId": 9,
+            "content": "<p>Диаграмму нарисовать</p>",
+            "one": "10"
+        },
+        "32": {
+            "type": "action",
+            "content": "<p>Показать выбор:</p><ul><li>Файл создать</li><li>Файл открыть</li><li>Список открывавшихся файлов</li><li>Выход</li></ul>",
+            "one": "36"
+        },
+        "33": {
+            "type": "case",
+            "one": "39",
+            "content": "<p>Непустая строка</p>",
+            "two": "37"
+        },
+        "34": {
+            "type": "case",
+            "one": "18",
+            "two": "33",
+            "content": "<p>\"Файл открыть\"</p>"
+        },
+        "35": {
+            "type": "case",
+            "one": "15",
+            "two": "34",
+            "content": "<p>\"Файл создать\"</p>"
+        },
+        "36": {
+            "type": "select",
+            "one": "35",
+            "content": "<p>Выбор</p>"
+        },
+        "37": {
+            "one": "9",
+            "type": "case",
+            "content": "<p>\"Выход\"</p>"
+        },
+        "38": {
+            "type": "action",
+            "content": "<p>Нарисовать окно программы</p>",
+            "one": "3"
+        },
+        "39": {
+            "type": "branch",
+            "branchId": 3,
+            "content": "<p>Файл открыть диалогом</p>",
+            "one": "40"
+        },
+        "40": {
+            "type": "action",
+            "content": "<p>Диалог открытия файла</p>",
+            "one": "18"
+        }
+    },
+    "type": "drakon",
+    "id": "dracon_SUC.drakon"
+}
