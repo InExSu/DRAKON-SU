@@ -19,7 +19,6 @@ OPTIONS = {
     }
 }
 
-# Используем современный подход без fetch_build_eggs
 setup_requires = ['py2app']
 
 setup(

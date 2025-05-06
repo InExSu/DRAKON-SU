@@ -18,7 +18,7 @@ def main():
     app = QApplication([])
     
     # главное окно 
-    window, scene = create_main_window()
+    window, scene = methods.create_main_window()
     
     window.show()
     
@@ -26,7 +26,41 @@ def main():
     while True:
         if _next_item_ == 32:
             if len(sys.argv) > 1:
+                #item 69
+                s_User_Choice = sys.argv[1]
+                _next_item_ = 60
+            else:
                 _next_item_ = 54
+    
+        elif _next_item_ == 54:
+            s_User_Choice = methods.file_Choice([])
+            _next_item_ = 470001
+    
+        elif _next_item_ == 470001:
+            if s_User_Choice == "File create":
+                #item 74
+                # TODO создать файл пустой диаграммы
+                _next_item_ = 75
+            else:
+                _next_item_ = 470002
+    
+        elif _next_item_ == 470002:
+            if s_User_Choice == "File open":
+                #item 70
+                s_User_Choice = methods.file_Open_Dialog()
+                _next_item_ = 71
+            else:
+                _next_item_ = 470003
+    
+        elif _next_item_ == 71:
+            if s_User_Choice is None:
+                _next_item_ = 54
+            else:
+                _next_item_ = 60
+    
+        elif _next_item_ == 470003:
+            if s_User_Choice == "Exit":
+                return None
             else:
                 _next_item_ = 60
     
@@ -43,20 +77,14 @@ def main():
                 _next_item_ = 54
     
         elif _next_item_ == 65:
-            if code_Good(s_Code):
-                return None
+            if methods.code_Good(s_Code):
+                _next_item_ = 75
             else:
                 _next_item_ = 54
     
-        elif _next_item_ == 54:
-            s_User_Choice = methods.file_Choice([])
-            _next_item_ = 470001
-    
-        elif _next_item_ == 470001:
-            if (s_User_Choice == "File create") or (not ((s_User_Choice == "File open") or (not (s_User_Choice == "Exit")))):
-                return None
-            else:
-                _next_item_ = 60
+        elif _next_item_ == 75:
+            app.exec_()
+            return None
     
 
 if __name__ == "__main__":
