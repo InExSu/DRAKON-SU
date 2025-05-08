@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QApplication, QGraphicsView, QGraphicsScene,
                              QMainWindow, QDialog, QVBoxLayout, QPushButton,
-                             QButtonGroup)
+                             QButtonGroup, QWidget, QLineEdit, QComboBox)
 from PyQt5.QtCore import QRectF
 import sys
 
@@ -100,7 +100,15 @@ def create_main_window():
     # Создаем графическую сцену и представление
     scene = QGraphicsScene()
     view = QGraphicsView(scene)
-    window.setCentralWidget(view)
+    
+    # Настраиваем главный layout
+    main_layout = QVBoxLayout()
+    main_layout.addWidget(view)
+    
+    # Создаем центральный виджет
+    central_widget = QWidget()
+    central_widget.setLayout(main_layout)
+    window.setCentralWidget(central_widget)
 
     return window, scene
 
@@ -132,3 +140,63 @@ def file_Open_Dialog():
     )
     
     return file_path if file_path else None
+
+
+def create_search_panel(parent, items_list):
+    """Создает панель поиска и фильтрации элементов
+    
+    Args:
+        parent: Родительский виджет
+        items_list: Список элементов для отображения
+        
+    Returns:
+        QWidget: Виджет с элементами управления поиском и фильтрацией
+    """
+    from PyQt5.QtWidgets import QLineEdit, QComboBox, QHBoxLayout
+    
+    # Создаем контейнер для элементов управления
+    search_panel = QWidget(parent)
+    layout = QHBoxLayout()
+    
+    # Поле поиска
+    search_field = QLineEdit()
+    search_field.setPlaceholderText("Поиск...")
+    layout.addWidget(search_field)
+    
+    # Фильтр по категориям
+    filter_combo = QComboBox()
+    filter_combo.addItem("Все элементы")
+    # Добавляем уникальные категории из items_list
+    categories = set(item.get('category', '') for item in items_list if 'category' in item)
+    for category in categories:
+        filter_combo.addItem(category)
+    layout.addWidget(filter_combo)
+    
+    search_panel.setLayout(layout)
+    return search_panel
+
+def filter_items(items, search_text, filter_category):
+    """Фильтрует список элементов по тексту и категории
+    
+    Args:
+        items: Список элементов
+        search_text: Текст для поиска
+        filter_category: Выбранная категория
+        
+    Returns:
+        list: Отфильтрованный список элементов
+    """
+    filtered = items
+    
+    # Применяем фильтр по категории
+    if filter_category and filter_category != "Все элементы":
+        filtered = [item for item in filtered 
+                   if item.get('category', '') == filter_category]
+    
+    # Применяем поиск по тексту
+    if search_text:
+        search_lower = search_text.lower()
+        filtered = [item for item in filtered 
+                   if search_lower in str(item).lower()]
+    
+    return filtered

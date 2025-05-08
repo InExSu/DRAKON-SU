@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import (QApplication, QGraphicsView, QGraphicsScene, 
-                           QMainWindow)
+from PyQt5.QtWidgets import QApplication  # Только необходимые импорты
 from PyQt5.QtCore import QRectF
 
 import sys
