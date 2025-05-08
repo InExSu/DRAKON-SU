@@ -8,6 +8,10 @@ sudo chown -R $(whoami):$(id -gn) .
 # уменьшить размер гит
 git gc --prune=now --aggressive
 
+# Активация виртуального окружения
+source venv/bin/activate
+# Деактивация виртуального окружения
+deactivate
 # запуск проекта
 python3 /Users/michaelpopov/Documents/GitHub/DRAKON-SUC/drakon_SUC.py
 # или
