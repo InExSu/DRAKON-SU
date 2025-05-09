@@ -5,9 +5,10 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QGraphicsScene, QGraphic
 from PyQt5.QtCore import Qt, QRectF, QLineF
 import sys
 from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QStyle
 
 def create_toolbar(window):
-    """Создание вертикальной панели инструментов справа от списка элементов"""
+    """Создание вертикальной панели инструментов с иконками"""
     toolbar = QToolBar(window)
     toolbar.setMovable(True)
     toolbar.setOrientation(Qt.Vertical)
@@ -18,15 +19,65 @@ def create_toolbar(window):
     
     toolbar.addSeparator()
     
-    new_action = QAction("Новый", window)
-    open_action = QAction("Открыть", window)
-    save_action = QAction("Сохранить", window)
-    
+    # Добавляем действия с иконками
+    new_action = QAction(window.style().standardIcon(QStyle.SP_FileIcon), "Файлы", window)
+    new_action.triggered.connect(lambda: show_file_toolbar(window))
     toolbar.addAction(new_action)
-    toolbar.addAction(open_action)
-    toolbar.addAction(save_action)
     
+    # Размещаем в центре (между Функциями и холстом)
     window.addToolBar(Qt.LeftToolBarArea, toolbar)
+    window.insertToolBarBreak(toolbar)  # Это обеспечит новую строку для инструментов
+
+def create_element_list(window):
+    """Создание плавающего списка элементов с фильтрацией"""
+    dock = QDockWidget("Функции", window)
+    dock.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
+    
+    container = QWidget()
+    layout = QVBoxLayout()
+    
+    filter_input = QLineEdit()
+    filter_input.setPlaceholderText("Фильтр")
+    filter_input.textChanged.connect(lambda: filter_elements(filter_input, element_list))
+    layout.addWidget(filter_input)
+    
+    element_list = QListWidget()
+    element_list.addItems(["Прямоугольник", "Ромб", "Овал", "Линия", "Текст"])
+    layout.addWidget(element_list)
+    
+    container.setLayout(layout)
+    dock.setWidget(container)
+    
+    # Размещаем слева (самая левая панель)
+    window.addDockWidget(Qt.LeftDockWidgetArea, dock)
+
+def show_file_toolbar(window):
+    """Отображение или скрытие панели инструментов 'Файлы'"""
+    # Проверяем, существует ли уже панель
+    if hasattr(window, 'file_toolbar'):
+        if window.file_toolbar.isVisible():
+            window.file_toolbar.hide()  # Скрываем панель, если она видима
+        else:
+            window.file_toolbar.show()  # Показываем панель, если она скрыта
+        return
+    
+    # Создаем панель, если она еще не существует
+    window.file_toolbar = QToolBar("Файлы", window)
+    window.file_toolbar.setMovable(True)
+    window.file_toolbar.setOrientation(Qt.Vertical)
+    
+    # Добавляем пункты
+    create_action = QAction("Создать", window)
+    open_action = QAction("Открыть", window)
+    history_action = QAction("Список открывавшихся", window)
+    
+    window.file_toolbar.addAction(create_action)
+    window.file_toolbar.addAction(open_action)
+    window.file_toolbar.addAction(history_action)
+    
+    # Размещаем справа от основной панели
+    window.addToolBar(Qt.LeftToolBarArea, window.file_toolbar)
+    window.file_toolbar.show()
 
 def create_element_list(window):
     """Создание плавающего списка элементов с фильтрацией"""
@@ -85,9 +136,13 @@ def main():
     window.setWindowTitle("DRAKON SUC diagram")
     window.setGeometry(100, 100, 800, 600)
     
-    create_toolbar(window)
+    # Сначала создаем панель Функции (слева)
     create_element_list(window)
     
+    # Затем создаем панель Инструменты (центр)
+    create_toolbar(window)
+    
+    # Холст диаграмм (самая правая часть)
     scene = QGraphicsScene(window)
     view = QGraphicsView(scene, window)
     window.setCentralWidget(view)
