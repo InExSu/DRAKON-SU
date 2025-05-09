@@ -2,35 +2,36 @@ import sys
 import yaml
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QGraphicsScene, QGraphicsView,
                            QGraphicsRectItem, QGraphicsTextItem, QGraphicsLineItem,
-                           QVBoxLayout, QWidget, QPushButton, QFileDialog)
-from PyQt5.QtCore import Qt, QRectF, QPointF, QLineF  # Добавляем QLineF
+                           QGraphicsPolygonItem, QVBoxLayout, QWidget, QPushButton, QFileDialog)
+from PyQt5.QtCore import Qt, QRectF, QPointF, QLineF
+from PyQt5.QtGui import QPolygonF  # Добавлен правильный импорт
 
 # Функции для отрисовки узлов диаграммы
 def draw_start_node(node, scene):
     """Отрисовывает стартовый узел"""
     rect = QGraphicsRectItem(QRectF(node['pos'][0], node['pos'][1], 100, 50))
-    rect.setBrush(Qt.green)
+    # Убрана установка цвета заливки
     scene.addItem(rect)
     add_text(node, scene)
 
 def draw_end_node(node, scene):
     """Отрисовывает конечный узел"""
     rect = QGraphicsRectItem(QRectF(node['pos'][0], node['pos'][1], 100, 50))
-    rect.setBrush(Qt.red)
+    # Убрана установка цвета заливки
     scene.addItem(rect)
     add_text(node, scene)
 
 def draw_condition_node(node, scene):
     """Отрисовывает условный узел"""
     diamond = create_diamond(node['pos'])
-    diamond.setBrush(Qt.yellow)
+    # Убрана установка цвета заливки
     scene.addItem(diamond)
     add_text(node, scene)
 
 def draw_action_node(node, scene):
     """Отрисовывает узел действия"""
     rect = QGraphicsRectItem(QRectF(node['pos'][0], node['pos'][1], 100, 50))
-    rect.setBrush(Qt.blue)
+    # Убрана установка цвета заливки
     scene.addItem(rect)
     add_text(node, scene)
 
@@ -43,12 +44,12 @@ def add_text(node, scene):
 def create_diamond(pos):
     """Создает ромб для условных узлов"""
     diamond = QGraphicsPolygonItem()
-    points = [
+    points = QPolygonF([
         QPointF(pos[0] + 50, pos[1]),
         QPointF(pos[0] + 100, pos[1] + 25),
         QPointF(pos[0] + 50, pos[1] + 50),
         QPointF(pos[0], pos[1] + 25)
-    ]
+    ])
     diamond.setPolygon(points)
     return diamond
 
@@ -91,42 +92,87 @@ def load_yaml(scene):
                     combined_data.update(doc)
             render_diagram(combined_data, scene)
 
+def get_node_geometry(node, x_pos, y_pos):
+    """Возвращает геометрию узла в зависимости от типа"""
+    if node['type'] == 'condition':
+        return {
+            'left': (x_pos + 25, y_pos + 25),
+            'right': (x_pos + 75, y_pos + 25),
+            'main': (x_pos + 50, y_pos + 50)
+        }
+    return (x_pos + 50, y_pos + 50)
+
+def update_positions(node, x_pos, y_pos):
+    """Обновляет позиции для следующего узла"""
+    if node['type'] == 'condition' and isinstance(node.get('connections'), list):
+        return (x_pos + 200, y_pos)
+    return (50, y_pos + 120)
+
+def get_start_point(node, nodes_dict, i):
+    """Возвращает начальную точку соединения"""
+    if node['type'] == 'condition':
+        return nodes_dict[node['id']]['left'] if i == 0 else nodes_dict[node['id']]['right']
+    src_x, src_y = node['pos']
+    return (src_x + 50, src_y + 50)
+
+def get_end_point(target_id, nodes_dict):
+    """Возвращает точку соединения - середину верхней стороны нижней фигуры"""
+    if isinstance(nodes_dict[target_id], dict):
+        # Для ромба используем нижнюю точку
+        return nodes_dict[target_id]['main']
+    # Для прямоугольников: середина верхней стороны (X+50, Y)
+    return (nodes_dict[target_id][0], nodes_dict[target_id][1])
+
+def draw_connections(nodes, nodes_dict, scene):
+    """Отрисовывает все соединения между узлами одной функции"""
+    for node in nodes:
+        if not node.get('connections'):
+            continue
+            
+        connections = list(node['connections'].values()) if isinstance(node['connections'], dict) else node['connections']
+        
+        for i, target_id in enumerate(connections):
+            # Проверяем, что целевой узел принадлежит текущей функции
+            if not any(n['id'] == target_id for n in nodes):
+                continue
+                
+            start_point = get_start_point(node, nodes_dict, i)
+            end_point = get_end_point(target_id, nodes_dict)
+            draw_connection(start_point, end_point, scene)
+
 def render_diagram(data, scene):
     """Отрисовывает диаграмму из данных с соединениями"""
-    if 'functions' not in data:
+    if not data.get('functions'):
         return
         
     y_pos = 50
-    nodes_dict = {} 
     
     for function_name, function_data in data['functions'].items():
-        if 'nodes' not in function_data:  # Проверка наличия узлов
+        if not function_data.get('nodes'):
             continue
             
-        x_pos = 50
-        
-        # Заголовок функции
+        # Отрисовка заголовка функции
         text = QGraphicsTextItem(function_name)
-        text.setPos(x_pos, y_pos - 30)
+        text.setPos(50, y_pos - 30)
         scene.addItem(text)
         
-        # Отрисовка узлов
+        # Отрисовка узлов и соединений
+        nodes_dict = {}
+        x_pos = 50
         for node in function_data['nodes']:
             node['pos'] = (x_pos, y_pos)
             draw_node(node, scene)
-            nodes_dict[node['id']] = (x_pos + 50, y_pos + 25)
-            y_pos += 120  # Вертикальный отступ между узлами
+            
+            # Сохраняем геометрию узла
+            nodes_dict[node['id']] = get_node_geometry(node, x_pos, y_pos)
+            
+            # Обновляем позиции
+            x_pos, y_pos = update_positions(node, x_pos, y_pos)
             
         # Отрисовка соединений
-        for node in function_data['nodes']:
-            if 'connections' in node:
-                connections = node['connections']
-                if isinstance(connections, dict):
-                    connections = connections.values()
-                for target_id in connections:
-                    draw_connection(nodes_dict[node['id']], nodes_dict[target_id], scene)
+        draw_connections(function_data['nodes'], nodes_dict, scene)
         
-        y_pos += 100  # Отступ между функциями
+        y_pos += 100
 
 def draw_connection(start_pos, end_pos, scene):
     """Отрисовывает линию соединения между узлами"""
