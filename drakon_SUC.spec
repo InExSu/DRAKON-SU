@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['drakon_SUC.py'],
+    ['drakon_SU.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -21,7 +21,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='DRAKON_SUC',
+    name='DRAKON_SU',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -40,11 +40,11 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='DRAKON_SUC',
+    name='DRAKON_SU',
 )
 app = BUNDLE(
     coll,
-    name='DRAKON_SUC.app',
+    name='DRAKON_SU.app',
     icon=None,
     bundle_identifier=None,
 )

@@ -1,6 +1,6 @@
 from setuptools import setup
 
-APP = ['drakon_SUC.py']
+APP = ['drakon_SU.py']
 DATA_FILES = []
 OPTIONS = {
     'argv_emulation': False,
@@ -13,9 +13,9 @@ OPTIONS = {
     'excludes': ['Carbon'],
     'packages': ['PyQt5'],
     'plist': {
-        'CFBundleName': "DRAKON_SUC",
-        'CFBundleDisplayName': "DRAKON_SUC",
-        'CFBundleIdentifier': "com.yourcompany.drakon-suc",
+        'CFBundleName': "DRAKON_SU",
+        'CFBundleDisplayName': "DRAKON_SU",
+        'CFBundleIdentifier': "com.yourcompany.drakon-su",
     }
 }
 

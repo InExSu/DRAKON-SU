@@ -1,0 +1,243 @@
+header: |
+  import os
+  import re
+  import json
+  import threading
+  from datetime import datetime
+  from concurrent.futures import ThreadPoolExecutor
+  
+  # Константы
+  MAX_THREADS = 4
+  LOG_PATTERNS = {
+      'error': r'ERROR:.*',
+      'warning': r'WARNING:.*',
+      'info': r'INFO:.*'
+  }
+
+---
+functions:
+  count_words:
+    description: "Простая функция подсчета количества слов в строке"
+    parameters: ["text: str"]
+    returns: "int"
+    nodes:
+      - id: 1
+        type: "start"
+        text: "Подсчет слов"
+        connections: [2]
+      
+      - id: 2
+        type: "condition"
+        text: "text пустой?"
+        connections: {yes: 3, no: 4}
+      
+      - id: 3
+        type: "action"
+        text: "return 0"
+        connections: [5]
+      
+      - id: 4
+        type: "action"
+        text: "return len(text.split())"
+        connections: [5]
+      
+      - id: 5
+        type: "end"
+        text: "Конец"
+        connections: []
+
+  analyze_log_file:
+    description: "Сложная функция анализа файла журнала с различными ДРАКОН-элементами"
+    parameters: ["filepath: str", "options: dict = None"]
+    returns: "dict"
+    style: "silhouette"  # Указываем силуэт как тип макета
+    nodes:
+      # === ВЕТКА 1: Проверка и подготовка ===
+      - id: s1
+        type: "silhouette_branch"
+        text: "Проверка и подготовка"
+        connections: [1]
+      
+      - id: 1
+        type: "start"
+        text: "Начало анализа"
+        connections: [2]
+        style: {color: "#4CAF50", bold: true}
+      
+      - id: 2
+        type: "condition"
+        text: "Файл существует?"
+        connections: {yes: 3, no: 90}
+      
+      - id: 3
+        type: "action"
+        text: "options = options or {}"
+        connections: [4]
+      
+      - id: 4
+        type: "goto"
+        text: "Перейти к обработке"
+        goto: "s2" # прямое указание на ветку силуэта
+        connections: []
+      
+      # === ВЕТКА 2: Обработка файла ===
+      - id: s2
+        type: "silhouette_branch"
+        text: "Обработка файла"
+        connections: [10]
+      
+      - id: 10
+        type: "action"
+        text: "log_content = open(filepath, 'r').read()"
+        connections: [11]
+      
+      - id: 11
+        type: "action"
+        text: "lines = log_content.splitlines()"
+        connections: [12]
+      
+      - id: 12
+        type: "collapsible"
+        text: "Подготовка данных анализа"
+        default_state: "collapsed"
+        connections: [15]
+        contains:
+          - id: 12.1
+            type: "action"
+            text: "result = {'errors': 0, 'warnings': 0, 'info': 0}"
+            connections: [12.2]
+          
+          - id: 12.2
+            type: "action"
+            text: "timestamp = datetime.now().isoformat()"
+            connections: [12.3]
+          
+          - id: 12.3
+            type: "action"
+            text: "result['timestamp'] = timestamp"
+            connections: []
+      
+      - id: 15
+        type: "switch"
+        text: "Режим анализа:"
+        cases: {"quick": 20, "detailed": 30, "default": 40}
+        connections: []
+      
+      # === Switch case: Быстрый анализ ===
+      - id: 20
+        type: "action"
+        text: "stats = quick_analyze(lines)"
+        connections: [50]
+        style: {color: "#2196F3"}
+      
+      # === Switch case: Детальный анализ ===
+      - id: 30
+        type: "fork"
+        text: "Параллельный анализ"
+        connections: [31, 32, 33]
+      
+      - id: 31
+        type: "action"
+        text: "error_count = count_patterns(lines, LOG_PATTERNS['error'])"
+        connections: [35]
+      
+      - id: 32
+        type: "action"
+        text: "warning_count = count_patterns(lines, LOG_PATTERNS['warning'])"
+        connections: [35]
+      
+      - id: 33
+        type: "action"
+        text: "info_count = count_patterns(lines, LOG_PATTERNS['info'])"
+        connections: [35]
+      
+      - id: 35
+        type: "join"
+        text: "Объединение результатов анализа"
+        connections: [36]
+      
+      - id: 36
+        type: "action"
+        text: "stats = {'errors': error_count, 'warnings': warning_count, 'info': info_count}"
+        connections: [50]
+      
+      # === Switch case: По умолчанию ===
+      - id: 40
+        type: "action"
+        text: "stats = default_analyze(lines)"
+        connections: [50]
+        style: {color: "#FF9800"}
+      
+      # === Общее завершение ===
+      - id: 50
+        type: "action"
+        text: "result.update(stats)"
+        connections: [51]
+      
+      - id: 51
+        type: "condition"
+        text: "Сохранить в файл?"
+        connections: {yes: 52, no: 60}
+      
+      - id: 52
+        type: "action"
+        text: "с открытым файлом output_file=open(options['output'], 'w') as выполнить json.dump(result, output_file)"
+        connections: [60]
+        style: {font: "italic"}
+      
+      - id: 60
+        type: "goto"
+        text: "Перейти к завершению"
+        goto: "s3"
+        connections: []
+      
+      # === ВЕТКА 3: Завершение ===
+      - id: s3
+        type: "silhouette_branch"
+        text: "Завершение"
+        connections: [70]
+      
+      - id: 70
+        type: "action"
+        text: "log_duration(start_time, datetime.now())"
+        connections: [80]
+      
+      - id: 80
+        type: "action"
+        text: "return result"
+        connections: [85]
+        style: {color: "#4CAF50", bold: true}
+      
+      - id: 85
+        type: "end"
+        text: "Конец анализа"
+        connections: []
+      
+      # === Обработка ошибок ===
+      - id: 90
+        type: "action"
+        text: "raise FileNotFoundError(f'Файл не найден: {filepath}')"
+        connections: [95]
+        style: {color: "#F44336", bold: true}
+      
+      - id: 95
+        type: "end"
+        text: "Завершение с ошибкой"
+        connections: []
+        style: {color: "#F44336"}
+
+---
+footer: |
+  # Код после функций.
+  def quick_analyze(lines):
+      """Быстрый анализ строк журнала."""
+      result = {'errors': 0, 'warnings': 0, 'info': 0}
+      for line in lines:
+          if 'ERROR' in line:
+              result['errors'] += 1
+          elif 'WARNING' in line:
+              result['warnings'] += 1
+          elif 'INFO' in line:
+              result['info'] += 1
+      return result
+  

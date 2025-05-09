@@ -94,7 +94,7 @@ def create_condition(x, y, size, text, scene):
 def create_main_window():
     """Создает и настраивает главное окно приложения"""
     window = QMainWindow()
-    window.setWindowTitle("DRAKON SUC")
+    window.setWindowTitle("DRAKON SU")
     window.resize(800, 600)
 
     # Создаем графическую сцену и представление
