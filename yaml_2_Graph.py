@@ -3,7 +3,7 @@ import yaml
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QGraphicsScene, QGraphicsView,
                            QGraphicsRectItem, QGraphicsTextItem, QGraphicsLineItem,
                            QVBoxLayout, QWidget, QPushButton, QFileDialog)
-from PyQt5.QtCore import Qt, QRectF, QPointF
+from PyQt5.QtCore import Qt, QRectF, QPointF, QLineF  # Добавляем QLineF
 
 # Функции для отрисовки узлов диаграммы
 def draw_start_node(node, scene):
@@ -92,30 +92,46 @@ def load_yaml(scene):
             render_diagram(combined_data, scene)
 
 def render_diagram(data, scene):
-    """Отрисовывает диаграмму из данных"""
+    """Отрисовывает диаграмму из данных с соединениями"""
     if 'functions' not in data:
         return
         
     y_pos = 50
+    nodes_dict = {} 
     
     for function_name, function_data in data['functions'].items():
-        if 'nodes' not in function_data:
+        if 'nodes' not in function_data:  # Проверка наличия узлов
             continue
             
         x_pos = 50
         
-        # Добавляем заголовок функции
+        # Заголовок функции
         text = QGraphicsTextItem(function_name)
         text.setPos(x_pos, y_pos - 30)
         scene.addItem(text)
         
-        # Отрисовываем узлы
+        # Отрисовка узлов
         for node in function_data['nodes']:
             node['pos'] = (x_pos, y_pos)
             draw_node(node, scene)
-            y_pos += 120
+            nodes_dict[node['id']] = (x_pos + 50, y_pos + 25)
+            y_pos += 120  # Вертикальный отступ между узлами
             
-        y_pos += 100
+        # Отрисовка соединений
+        for node in function_data['nodes']:
+            if 'connections' in node:
+                connections = node['connections']
+                if isinstance(connections, dict):
+                    connections = connections.values()
+                for target_id in connections:
+                    draw_connection(nodes_dict[node['id']], nodes_dict[target_id], scene)
+        
+        y_pos += 100  # Отступ между функциями
+
+def draw_connection(start_pos, end_pos, scene):
+    """Отрисовывает линию соединения между узлами"""
+    line = QGraphicsLineItem(QLineF(start_pos[0], start_pos[1], end_pos[0], end_pos[1]))
+    scene.addItem(line)
 
 def draw_node(node, scene):
     """Выбирает и вызывает соответствующую функцию отрисовки узла"""
