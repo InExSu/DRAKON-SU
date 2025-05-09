@@ -1,0 +1,53 @@
+header: |
+    # произвольный код
+    # любое колво строк
+---
+functions:
+    # имя функции
+    simplex:
+        parameters: ""
+        returns: ""
+    nodes:
+      - id: 1
+        type: "start"
+        text: "simplex"
+        connections: [2]
+
+      - id: 2
+        type: "end"
+        text: "конец"
+        connections: []
+
+    complex:
+        parameters: "text: str"
+        returns: "int"
+    nodes:
+
+      - id: 1
+        type: "start"
+        text: "complex"
+        connections: [2]
+     
+      - id: 2
+        type: "condition"
+        text: "text пустой?"
+        connections: {yes: 3, no: 4}
+      
+      - id: 3
+        type: "action"
+        text: "return 0"
+        connections: [5]
+      
+      - id: 4
+        type: "action"
+        text: "return len(text.split())"
+        connections: [5]
+      
+      - id: 5
+        type: "end"
+        text: "Конец"
+        connections: [] 
+---
+footer: |
+  # Код после функций. 
+  # Любое колво строк.
