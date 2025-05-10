@@ -29,3 +29,5 @@ pyinstaller --windowed --onedir --name "DRAKON_SU" drakon_SU.py --noconfirm
 # open /Users/michaelpopov/Documents/GitHub/DRAKON-SU/dist/DRAKON_SU.app
 open dist/DRAKON_SU.app
 
+# тесты
+python3 -m unittest discover tests

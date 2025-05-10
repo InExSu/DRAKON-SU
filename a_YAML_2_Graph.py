@@ -23,7 +23,10 @@ def code_2_Graph(s_Code):
     from PyQt5.QtGui import QPainterPath, QPen, QBrush, QColor
 
     scene = QGraphicsScene()
-    data = yaml.safe_load(s_Code)
+    try:
+        data = yaml.safe_load(s_Code)
+    except Exception:
+        return scene
     if not data or 'functions' not in data:
         return scene
 
@@ -274,109 +277,3 @@ def _draw_start_node(context, node_id, text):
     # Фиксированное смещение для следующего узла
     context['y_offset'] += 60  
     return item
-
-
-def code_2_Graph(s_Code):
-    """
-    Преобразует YAML-код в графическое представление диаграммы DRAKON.
-    Без машины состояний и логирования.
-    """
-    import yaml
-    from PyQt5.QtWidgets import QGraphicsScene
-    from PyQt5.QtCore import QRectF, QLineF, Qt
-    from PyQt5.QtGui import QPainterPath, QPen, QBrush, QColor
-
-    scene = QGraphicsScene()
-    data = yaml.safe_load(s_Code)
-    if not data or 'functions' not in data:
-        return scene
-
-    for func_name, func_data in data['functions'].items():
-        node_items = {}
-        x_pos = 50
-        y_offset = 50
-
-        # Сначала рисуем все узлы
-        for node in func_data.get('nodes', []):
-            node_id = node['id']
-            node_type = node['type']
-            text = node.get('text', '')
-
-            if node_type == 'start':
-                path = QPainterPath()
-                path.addRoundedRect(QRectF(x_pos, y_offset, 100, 40), 10, 10)
-                item = scene.addPath(path, QPen(Qt.black),
-                                     QBrush(QColor(200, 255, 200)))
-                text_item = scene.addText(text)
-                text_item.setPos(x_pos + 25, y_offset + 10)
-            elif node_type == 'end':
-                path = QPainterPath()
-                path.addRoundedRect(QRectF(x_pos, y_offset, 100, 40), 10, 10)
-                item = scene.addPath(path, QPen(Qt.black),
-                                     QBrush(QColor(255, 200, 200)))
-                text_item = scene.addText(text)
-                text_item.setPos(x_pos + 25, y_offset + 10)
-            elif node_type == 'action':
-                item = scene.addRect(QRectF(x_pos, y_offset, 100, 40))
-                text_item = scene.addText(text)
-                text_item.setPos(x_pos + 10, y_offset + 10)
-            elif node_type == 'if':
-                from PyQt5.QtWidgets import QGraphicsPolygonItem
-                from PyQt5.QtCore import QPointF
-                from PyQt5.QtGui import QPolygonF  # Исправленный импорт
-                points = [
-                    QPointF(x_pos, y_offset - 20),
-                    QPointF(x_pos + 50, y_offset),
-                    QPointF(x_pos, y_offset + 20),
-                    QPointF(x_pos - 50, y_offset)
-                ]
-                item = QGraphicsPolygonItem()
-                item.setPolygon(QPolygonF(points))
-                scene.addItem(item)
-                text_item = scene.addText(text)
-                text_item.setPos(x_pos - text_item.boundingRect().width() / 2,
-                                 y_offset - text_item.boundingRect().height() / 2)
-            elif node_type == 'switch':
-                from PyQt5.QtWidgets import QGraphicsPolygonItem
-                from PyQt5.QtCore import QPointF
-                from PyQt5.QtGui import QPolygonF  # Исправленный импорт
-                points = [
-                    QPointF(x_pos - 50, y_offset),
-                    QPointF(x_pos, y_offset - 30),
-                    QPointF(x_pos + 50, y_offset),
-                    QPointF(x_pos, y_offset + 30)
-                ]
-                item = QGraphicsPolygonItem()
-                item.setPolygon(QPolygonF(points))
-                scene.addItem(item)
-                text_item = scene.addText(text)
-                text_item.setPos(x_pos - text_item.boundingRect().width() / 2,
-                                 y_offset - text_item.boundingRect().height() / 2)
-            elif node_type == 'parallels':
-                item = scene.addRect(QRectF(x_pos, y_offset, 100, 40))
-                text_item = scene.addText(text)
-                text_item.setPos(x_pos + 10, y_offset + 10)
-            else:
-                continue
-
-            node_items[node_id] = (item, x_pos, y_offset)
-            y_offset += 60
-
-        # Затем рисуем соединения
-        for node in func_data.get('nodes', []):
-            source_id = node['id']
-            if source_id not in node_items or 'connections' not in node:
-                continue
-            source_item, src_x, src_y = node_items[source_id]
-            source_bottom = src_y + 40
-            for target_id in node['connections']:
-                if target_id not in node_items:
-                    continue
-                target_item, trg_x, trg_y = node_items[target_id]
-                target_top = trg_y
-                scene.addLine(
-                    QLineF(src_x + 50, source_bottom, trg_x + 50, target_top),
-                    QPen(QColor(0, 0, 0), 1)
-                )
-
-    return scene
