@@ -1,0 +1,14 @@
+{
+    "python.workspaceSymbols.exclusionPatterns": [
+        "**/site-packages/**",
+        "**/__pycache__/**",
+        "**/.venv/**",
+        "**/.mypy_cache/**",
+        "**/.pytest_cache/**",
+        "**/node_modules/**",
+        "**/.git/**",
+        "**/.idea/**",
+        "**/.vscode/**"
+    ],
+    "python.jediEnabled": true
+}

@@ -13,8 +13,6 @@ dist/
 *.egg
 
 # Файлы IDE
-.idea/
-.vscode/
 *.swp
 *.swo
 
