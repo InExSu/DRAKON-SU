@@ -1,7 +1,6 @@
 header: |
     # произвольный код
     # любое колво строк
----
 functions:
     simplex:
         parameters: ""
@@ -25,7 +24,7 @@ functions:
             text: "complex"
             connections: [2]
           - id: 2
-            type: "condition"
+            type: "if"
             text: "text пустой?"
             connections: [3, 4]
           - id: 3
@@ -40,7 +39,6 @@ functions:
             type: "end"
             text: "Конец"
             connections: []
----
 footer: |
   # Код после функций. 
   # Любое колво строк.

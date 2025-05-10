@@ -220,108 +220,44 @@ def setup_layout(window, toolbar, dock, view):
     window.addToolBar(Qt.LeftToolBarArea, toolbar)
     window.addDockWidget(Qt.RightDockWidgetArea, dock)
 
-
-def draw_sample_diagram(scene):
-    #  Удалить
-    """Рисует тестовую диаграмму"""
-    rect1 = QGraphicsRectItem(QRectF(50, 50, 100, 50))
-    rect1.setBrush(Qt.white)
-    scene.addItem(rect1)
-
-    text1 = QGraphicsTextItem("Start")
-    text1.setPos(75, 65)
-    scene.addItem(text1)
-
-    rect2 = QGraphicsRectItem(QRectF(50, 150, 100, 50))
-    rect2.setBrush(Qt.white)
-    scene.addItem(rect2)
-
-    text2 = QGraphicsTextItem("End")
-    text2.setPos(80, 165)
-    scene.addItem(text2)
-
-    line = QGraphicsLineItem(QLineF(100, 100, 100, 150))
-    scene.addItem(line)
-
-def code_2_Graph(s_Code):
-    """Преобразует YAML-код в графическое представление диаграммы"""
+def yaml_Validate(s_YAML: str) -> bool:
+    # Проверяет валидность YAML-кода
     import yaml
-    from PyQt5.QtWidgets import QGraphicsScene
-    from PyQt5.QtCore import QRectF, QLineF
-    from PyQt5.QtGui import QPainterPath, QPen, QBrush, QColor
-
-    scene = QGraphicsScene()
-    
     try:
-        data = yaml.safe_load(s_Code)
-        if not data or 'functions' not in data:
-            return scene
+        yaml.safe_load(s_YAML)
+        return True
+    except yaml.YAMLError:
+        return False
 
-        y_offset = 50
+def file_New_Create():
+    # TODO протестируй
+    """Создает шаблон нового файла DRAKON в формате YAML"""
+    s_Code = """
+header: |
+    # произвольный код
+functions:
+    simplex:
+        parameters: ""
+        returns: ""
+        nodes:
+        - id: 1 
+            type: "start"
+            text: "simplex"
+            connections: [2]
+        - id: 2 
+            type: "end"
+            text: "конец"
+            connections: []
+footer: |
+    # Код после функций.
+"""
 
-        for func_name, func_data in data['functions'].items():
-            if 'nodes' not in func_data:
-                continue
-
-            node_items = {}
-            x_pos = 50
-
-            for node in func_data['nodes']:
-                node_id = node['id']
-                node_type = node['type']
-                text = node.get('text', '')
-                item = None
-
-                if node_type == 'start':
-                    # Создаем скругленный прямоугольник через Path
-                    path = QPainterPath()
-                    path.addRoundedRect(QRectF(x_pos, y_offset, 100, 40), 10, 10)
-                    item = scene.addPath(path, QPen(Qt.black), QBrush(QColor(200, 255, 200)))
-                    
-                    text_item = scene.addText(text)
-                    text_item.setPos(x_pos + 25, y_offset + 10)
-                    y_offset += 60
-
-                elif node_type == 'end':
-                    path = QPainterPath()
-                    path.addRoundedRect(QRectF(x_pos, y_offset, 100, 40), 10, 10)
-                    item = scene.addPath(path, QPen(Qt.black), QBrush(QColor(255, 200, 200)))
-                    
-                    text_item = scene.addText(text)
-                    text_item.setPos(x_pos + 25, y_offset + 10)
-                    y_offset += 60
-
-                if item:
-                    node_items[node_id] = (item, x_pos, y_offset)
-
-            # Отрисовка связей между узлами
-            for node in func_data['nodes']:
-                if 'connections' in node and node['connections']:
-                    source_id = node['id']
-                    if source_id not in node_items:
-                        continue
-
-                    source_item, src_x, src_y = node_items[source_id]
-                    source_bottom = src_y - 60 + 40  # Нижняя точка стартового узла
-
-                    for target_id in node['connections']:
-                        if target_id not in node_items:
-                            continue
-
-                        target_item, trg_x, trg_y = node_items[target_id]
-                        target_top = trg_y - 60  # Верхняя точка целевого узла
-
-                        # Рисуем вертикальную линию соединения
-                        line = scene.addLine(
-                            QLineF(src_x + 50, source_bottom, 
-                                  trg_x + 50, target_top),
-                            QPen(QColor(0, 0, 0), 1)
-                        )
-
-        # Удаляем строки с view и масштабированием
-        scene.setSceneRect(scene.itemsBoundingRect())
-
-    except yaml.YAMLError as e:
-        print(f"Ошибка парсинга YAML: {e}")
-    
-    return scene
+    # сохранить s_Code в файл
+    s_File_Name = QFileDialog.getSaveFileName(
+        dialog, "Сохранить файл", "", "DRAKON Files (*.drakon)")[0]
+    if s_File_Name:
+        with open(s_File_Name, "w") as file:
+            file.write(s_Code)
+        return s_File_Name
+    else:
+        return ""
