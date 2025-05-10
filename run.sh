@@ -13,3 +13,6 @@ pyinstaller --clean --noconfirm --log-level=ERROR \
 
 # Запуск приложения
 /Users/michaelpopov/Documents/GitHub/DRAKON-SU/dist/DRAKON_SU.app/Contents/MacOS/DRAKON_SU
+
+# запуск с параметрами
+python3 a_Drakon_SU.py b_00_drakon_SU.yaml

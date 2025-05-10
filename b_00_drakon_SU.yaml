@@ -1,12 +1,11 @@
 header: |
     # произвольный код
     # любое колво строк
----
 functions:
     simplex:
         parameters: ""
         returns: ""
-        nodes:  # Узлы должны быть внутри функции
+        nodes:
           - id: 1 
             type: "start"
             text: "simplex"
@@ -15,7 +14,6 @@ functions:
             type: "end"
             text: "конец"
             connections: []
----
 footer: |
   # Код после функций. 
   # Любое колво строк.

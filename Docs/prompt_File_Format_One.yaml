@@ -1,18 +1,5 @@
 header: |
   import os
-  import re
-  import json
-  import threading
-  from datetime import datetime
-  from concurrent.futures import ThreadPoolExecutor
-  
-  # Константы
-  MAX_THREADS = 4
-  LOG_PATTERNS = {
-      'error': r'ERROR:.*',
-      'warning': r'WARNING:.*',
-      'info': r'INFO:.*'
-  }
 
 ---
 functions:
@@ -229,15 +216,4 @@ functions:
 ---
 footer: |
   # Код после функций.
-  def quick_analyze(lines):
-      """Быстрый анализ строк журнала."""
-      result = {'errors': 0, 'warnings': 0, 'info': 0}
-      for line in lines:
-          if 'ERROR' in line:
-              result['errors'] += 1
-          elif 'WARNING' in line:
-              result['warnings'] += 1
-          elif 'INFO' in line:
-              result['info'] += 1
-      return result
   
