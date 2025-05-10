@@ -1,0 +1,10 @@
+Node 1 (start): x=300, y=50, text='complex'
+Node 2 (if): x=300, y=170, text='text пустой?'
+Node 3 (action): x=150, y=310, text='return 0'
+Node 4 (action): x=450, y=370, text='return len(text.split())'
+Node 5 (end): x=300, y=480, text='Конец'
+Connection: 1 -> 2 (from x=350, y=90 to x=350, y=170)
+Connection: 2 -> 3 (from x=350, y=210 to x=200, y=310)
+Connection: 2 -> 4 (from x=350, y=210 to x=500, y=370)
+Connection: 3 -> 5 (from x=200, y=350 to x=350, y=480)
+Connection: 4 -> 5 (from x=500, y=410 to x=350, y=480)

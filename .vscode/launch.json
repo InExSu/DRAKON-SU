@@ -11,7 +11,7 @@
             "justMyCode": true
         },
         {
-            "name": "a_Drakon_SU.py b_00_drakon_SU.yaml",
+            "name": "a_Drakon_SU.py *.yaml",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/a_Drakon_SU.py",

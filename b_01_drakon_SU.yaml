@@ -2,19 +2,6 @@ header: |
     # произвольный код
     # любое колво строк
 functions:
-    simplex:
-        parameters: ""
-        returns: ""
-        nodes:
-          - id: 1 
-            type: "start"
-            text: "simplex"
-            connections: [2]
-          - id: 2 
-            type: "end"
-            text: "конец"
-            connections: []
-
     complex:
         parameters: "text: str"
         returns: "int"
@@ -26,7 +13,13 @@ functions:
           - id: 2
             type: "if"
             text: "text пустой?"
-            connections: [3, 4]
+            connections:
+              - label: "Да"
+                target: 3
+                direction: "right" # линия пойдёт из правого угла шестиугольника вправо и под прямым углом к нужному узлу
+              - label: "Нет"
+                target: 4 
+                direction: "down" # линия пойдёт из центра нижней линии шестиугольника вниз, там будет нужный узел
           - id: 3
             type: "action"
             text: "return 0"
