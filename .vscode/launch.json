@@ -15,7 +15,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/a_Drakon_SU.py",
-            "args": ["${workspaceFolder}/b_01_drakon_SU.yaml"],
+            "args": ["--file_open ${workspaceFolder}/b_01_drakon_SU.yaml"],
             "console": "integratedTerminal",
             "python": "${workspaceFolder}/venv/bin/python3",
             "justMyCode": true

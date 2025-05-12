@@ -27,20 +27,44 @@ def a_Main():
     while True:
         if _next_item_ == 68:
             """Основная функция приложения"""
+            
             app = QApplication([])
             
             s_Error = ""
             
             # главное окно 
-            window, scene = methods.create_main_window()
+            window = methods.create_main_window()
+            _next_item_ = 100
+    
+        elif _next_item_ == 100:
+            s_User_Choice = methods.options_FileName()
             _next_item_ = 32
     
         elif _next_item_ == 32:
-            if len(sys.argv) > 1:
-                #item 69
-                s_User_Choice = sys.argv[1]
-                _next_item_ = 60
+            if s_User_Choice == '':
+                _next_item_ = 54
             else:
+                _next_item_ = 60
+    
+        elif _next_item_ == 60:
+            if os.path.exists(s_User_Choice):
+                #item 64
+                with open(s_User_Choice, 'r', encoding='utf-8') as file:
+                    s_Code = file.read()
+                _next_item_ = 65
+            else:
+                #item 63
+                # TOOD 
+                # сообщение Файла НЕТ
+                _next_item_ = 54
+    
+        elif _next_item_ == 65:
+            if methods.yaml_Validate(s_Code):
+                _next_item_ = 101
+            else:
+                #item 82
+                s_Error = \
+                "Код диаграммы плохой"
                 _next_item_ = 54
     
         elif _next_item_ == 54:
@@ -56,7 +80,7 @@ def a_Main():
                 _next_item_ = 470002
     
         elif _next_item_ == 77:
-            s_Code = file_Empty_Create()
+            s_Code = methods.file_New_Create()
             _next_item_ = 78
     
         elif _next_item_ == 78:
@@ -66,7 +90,33 @@ def a_Main():
                 "Ошибка создания нового файла"
                 return None
             else:
-                _next_item_ = 98
+                _next_item_ = 101
+    
+        elif _next_item_ == 101:
+            # Создание элементов интерфейса
+            toolbar = methods.create_toolbar(window)
+            function_dock, filter_input, function_list = methods.create_function_list(window)
+            scene, view = methods.create_diagram_canvas(window)
+            
+            # Настройка и отображение
+            methods.setup_layout(window, toolbar, function_dock, view)
+            _next_item_ = 98
+    
+        elif _next_item_ == 98:
+            scene = a_YAML_2_Graph.code_2_Graph(s_Code)
+            
+            view = QGraphicsView(scene)
+            
+            window.setCentralWidget(view)
+            _next_item_ = 76
+    
+        elif _next_item_ == 76:
+            window.show()
+            _next_item_ = 75
+    
+        elif _next_item_ == 75:
+            sys.exit(app.exec_())
+            return None
     
         elif _next_item_ == 470002:
             if s_User_Choice == "File open dialog":
@@ -90,44 +140,6 @@ def a_Main():
                 return None
             else:
                 _next_item_ = 60
-    
-        elif _next_item_ == 60:
-            if os.path.exists(s_User_Choice):
-                #item 64
-                with open(s_User_Choice, 'r', encoding='utf-8') as file:
-                    s_Code = file.read()
-                _next_item_ = 65
-            else:
-                #item 63
-                # TOOD 
-                # сообщение Файла НЕТ
-                _next_item_ = 54
-    
-        elif _next_item_ == 65:
-            if methods.yaml_Validate(s_Code):
-                _next_item_ = 98
-            else:
-                #item 82
-                s_Error = \
-                "Код диаграммы плохой"
-                _next_item_ = 54
-    
-        elif _next_item_ == 98:
-            
-            scene = a_YAML_2_Graph.code_2_Graph(s_Code)
-            
-            view = QGraphicsView(scene)
-            
-            window.setCentralWidget(view)
-            _next_item_ = 76
-    
-        elif _next_item_ == 76:
-            window.show()
-            _next_item_ = 75
-    
-        elif _next_item_ == 75:
-            sys.exit(app.exec_())
-            return None
     
 
 

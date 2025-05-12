@@ -16,17 +16,17 @@ functions:
             connections:
               - label: "Да"
                 target: 3
-                direction: "right" # линия пойдёт из правого угла шестиугольника вправо и под прямым углом к нужному узлу
+                direction: "right" # линия пойдёт из правого угла шестиугольника вправо
               - label: "Нет"
                 target: 4 
                 direction: "down" # линия пойдёт из центра нижней линии шестиугольника вниз, там будет нужный узел
           - id: 3
             type: "action"
-            text: "return 0"
+            text: "b = False"
             connections: [5]
           - id: 4
             type: "action"
-            text: "return len(text.split())"
+            text: "b = True"
             connections: [5]
           - id: 5 
             type: "end"

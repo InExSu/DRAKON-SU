@@ -1,183 +1,126 @@
 import logging
 import yaml
-from PyQt5.QtWidgets import QGraphicsScene, QGraphicsPolygonItem
+from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtCore import QRectF, QLineF, Qt, QPointF
 from PyQt5.QtGui import QPainterPath, QPen, QBrush, QColor, QPolygonF
 
-# Конфигурация логирования
-logging.basicConfig(
-    filename='drakon_debug.log',
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-
-# Константы для визуализации
-NODE_WIDTH = 150
-NODE_HEIGHT = 50
-BRANCH_OFFSET = 120
-COLORS = {
-    'start': QColor(200, 255, 200),
-    'end': QColor(255, 200, 200),
-    'if': QColor(240, 240, 150),
-    'action': QColor(220, 220, 255)
-}
+# Настройка логгера
 
 
-def parse_yaml_code(s_code: str) -> dict:
-    """Парсит YAML-код и выполняет базовую валидацию структуры."""
+def setup_logging():
+    logging.basicConfig(
+        filename='drakon_debug.log',
+        level=logging.DEBUG,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
+
+# Конфигурация визуализации
+
+
+def get_config():
+    return {
+        'NODE_WIDTH': 150,
+        'NODE_HEIGHT': 50,
+        'BRANCH_OFFSET': 120,
+        'COLORS': {
+            'start': QColor(200, 255, 200),
+            'end': QColor(255, 200, 200),
+            'if': QColor(240, 240, 150),
+            'action': QColor(220, 220, 255)
+        }
+    }
+
+# Парсинг YAML
+
+
+def parse_yaml(yaml_str: str) -> dict:
     try:
-        data = yaml.safe_load(s_code)
+        data = yaml.safe_load(yaml_str)
         if not data or 'functions' not in data:
-            logging.error("Отсутствуют функции в YAML")
+            logging.error("Invalid YAML structure: missing 'functions'")
             return None
-
-        # Валидация структуры функций
-        for func_name, func_data in data['functions'].items():
-            if 'nodes' not in func_data:
-                logging.error(f"Функция {func_name} не содержит узлов")
-                return None
         return data
     except yaml.YAMLError as e:
-        logging.error(f"Ошибка парсинга YAML: {e}")
+        logging.error(f"YAML parsing error: {e}")
         return None
 
+# Расчет позиций узлов
 
-def calculate_node_positions(nodes: list) -> dict:
-    """Вычисляет позиции с учетом вложенных соединений."""
+
+def calculate_positions(nodes: list, config: dict) -> dict:
     positions = {}
     y_level = 50
-    branch_stack = []
 
-    # Первый проход: создание базовых позиций
+    # Первый проход - базовые позиции
     for node in nodes:
         node_id = str(node['id'])
         positions[node_id] = (400, y_level)
         y_level += 80 if node['type'] != 'end' else 60
 
-    # Второй проход: обработка ветвлений с глубоким сканированием
+    # Второй проход - обработка ветвлений
     for node in nodes:
         if node['type'] == 'if':
-            connections = node.get('connections', [])
-            valid_targets = []
-
-            # Глубокая обработка вложенных словарей
-            for conn in connections:
-                if isinstance(conn, dict):
-                    target = str(conn.get('target', ''))
-                    if target and target in positions:
-                        valid_targets.append(target)
-
-            # Позиционирование только валидных целей
-            base_x, base_y = positions[str(node['id'])]
-            for i, target in enumerate(valid_targets):
-                x_offset = BRANCH_OFFSET if i == 0 else -BRANCH_OFFSET
-                positions[target] = (base_x + x_offset, base_y + 80)
+            process_if_branch(node, positions, config)
 
     return positions
 
 
-def draw_connections(scene: QGraphicsScene, nodes: list, positions: dict):
-    """Обрабатывает соединения узлов с учетом сложных структур."""
-    for node in nodes:
-        source_id = str(node['id'])
-        if source_id not in positions:
-            continue
+def process_if_branch(node: dict, positions: dict, config: dict):
+    connections = node.get('connections', [])
+    valid_targets = []
 
-        connections = node.get('connections', [])
-        processed_connections = []
+    # Обработка разных форматов соединений
+    if isinstance(connections, dict):
+        connections = [{'target': k, 'direction': v}
+                       for k, v in connections.items()]
+    elif isinstance(connections, list):
+        connections = [{'target': c, 'direction': 'down'} if not isinstance(c, dict) else c 
+                       for c in connections]
 
-        # Нормализация формата соединений для словарей с метками
-        if isinstance(connections, list):
-            for conn in connections:
-                if isinstance(conn, dict):
-                    target = str(conn.get('target', ''))
-                    if target:  # Добавляем только валидные цели
-                        processed_connections.append({
-                            'target': target,
-                            'direction': conn.get('direction', 'down')
-                        })
-                else:
-                    processed_connections.append({
-                        'target': str(conn),
-                        'direction': 'down'
-                    })
-        elif isinstance(connections, dict):
-            for target, direction in connections.items():
-                processed_connections.append(
-                    {'target': str(target), 'direction': direction})
+    # Фильтрация валидных целей
+    for conn in connections:
+        target = str(conn.get('target', ''))
+        if target in positions:
+            valid_targets.append((target, conn.get('direction', 'down')))
 
-        # Отрисовка соединений
-        for conn in processed_connections:
-            target_id = conn['target']
-            if target_id not in positions:
-                logging.warning(f"Не удалось найти целевой узел: {target_id}")
-                continue
+    # Позиционирование ветвей
+    base_x, base_y = positions[str(node['id'])]
+    for i, (target, direction) in enumerate(valid_targets):
+        x_offset = config['BRANCH_OFFSET'] if direction in [
+            'right', 'right-down'] else -config['BRANCH_OFFSET']
+        positions[target] = (base_x + x_offset, base_y + 80)
 
-            src_x, src_y = positions[source_id]
-            trg_x, trg_y = positions[target_id]
-            direction = conn.get('direction', 'down')
-
-            # Определение направления соединения
-            horizontal_dir = 'right' if direction in [
-                'right', 'right-down'] else 'left'
-
-            if node['type'] == 'if':
-                start_point = QPointF(
-                    src_x + (NODE_WIDTH / 2 if horizontal_dir ==
-                             'right' else -NODE_WIDTH / 2),
-                    src_y + NODE_HEIGHT / 2
-                )
-
-                mid_x = start_point.x() + (50 if horizontal_dir == 'right' else -50)
-                mid_y = max(trg_y, src_y + 20)  # Минимальная высота изгиба
-
-                path = QPainterPath()
-                path.moveTo(start_point)
-                path.lineTo(mid_x, start_point.y())
-                path.lineTo(mid_x, mid_y)
-                path.lineTo(trg_x, trg_y)
-
-                pen = QPen(QColor(0, 150, 0) if horizontal_dir ==
-                           'right' else QColor(150, 0, 0), 2)
-                scene.addPath(path, pen)
-            else:
-                line = QLineF(src_x, src_y + NODE_HEIGHT, trg_x, trg_y)
-                scene.addLine(line, QPen(Qt.black, 2))
+# Отрисовка узлов
 
 
-def draw_node(scene: QGraphicsScene, node: dict, x: float, y: float):
-    """Создает графическое представление узла."""
+def draw_node(scene: QGraphicsScene, node: dict, pos: tuple, config: dict):
+    x, y = pos
     node_type = node['type']
     text = node.get('text', '')
 
-    # Общие настройки
-    pen = QPen(Qt.black, 2)
-    brush = QBrush(COLORS.get(node_type, Qt.white))
-
+    # Создание формы
     if node_type == 'if':
-        # Шестиугольник для условия
-        hexagon = create_hexagon(x, y, NODE_WIDTH, NODE_HEIGHT)
-        item = scene.addPolygon(hexagon, pen, brush)
+        shape = create_hexagon(
+            x, y, config['NODE_WIDTH'], config['NODE_HEIGHT'])
+        scene.addPolygon(shape, QPen(Qt.black, 2),
+                         QBrush(config['COLORS'][node_type]))
     elif node_type in ['start', 'end']:
-        # Скругленный прямоугольник
-        rect = QRectF(x - NODE_WIDTH / 2, y, NODE_WIDTH, NODE_HEIGHT)
         path = QPainterPath()
-        path.addRoundedRect(rect, 10, 10)
-        item = scene.addPath(path, pen, brush)
+        path.addRoundedRect(x - config['NODE_WIDTH'] / 2, y, 
+                            config['NODE_WIDTH'], config['NODE_HEIGHT'], 10, 10)
+        scene.addPath(path, QPen(Qt.black, 2),
+                      QBrush(config['COLORS'][node_type]))
     else:
-        # Стандартный прямоугольник
-        item = scene.addRect(x - NODE_WIDTH / 2, y,
-                             NODE_WIDTH, NODE_HEIGHT, pen, brush)
+        scene.addRect(x - config['NODE_WIDTH'] / 2, y,
+                      config['NODE_WIDTH'], config['NODE_HEIGHT'],
+                      QPen(Qt.black, 2), QBrush(config['COLORS'].get(node_type, Qt.white)))
 
     # Добавление текста
     text_item = scene.addText(text)
-    text_width = text_item.boundingRect().width()
-    text_item.setPos(x - text_width / 2, y + 10)
-    return item
+    text_item.setPos(x - text_item.boundingRect().width() / 2, y + 10)
 
 
 def create_hexagon(x: float, y: float, width: float, height: float) -> QPolygonF:
-    """Создает шестиугольник для узлов типа 'if'."""
     return QPolygonF([
         QPointF(x - width / 2 + 10, y),
         QPointF(x + width / 2 - 10, y),
@@ -187,44 +130,112 @@ def create_hexagon(x: float, y: float, width: float, height: float) -> QPolygonF
         QPointF(x - width / 2, y + height / 2)
     ])
 
+# Отрисовка соединений
 
-def code_2_Graph(s_code: str, function_name: str = None) -> QGraphicsScene:
-    """Главная функция визуализации с улучшенной обработкой ошибок."""
+
+def draw_connections(scene: QGraphicsScene, nodes: list, positions: dict, config: dict):
+    for node in nodes:
+        source_id = str(node['id'])
+        if source_id not in positions:
+            continue
+
+        connections = get_normalized_connections(node)
+
+        for conn in connections:
+            target_id = str(conn['target'])
+            if target_id not in positions:
+                continue
+
+            draw_single_connection(scene, node, conn, positions, config)
+
+
+def get_normalized_connections(node: dict) -> list:
+    connections = node.get('connections', [])
+    normalized = []
+
+    if isinstance(connections, dict):
+        normalized = [{'target': k, 'direction': v}
+                      for k, v in connections.items()]
+    elif isinstance(connections, list):
+        normalized = [c if isinstance(c, dict) else {'target': c, 'direction': 'down'} 
+                      for c in connections]
+    return normalized
+
+
+def draw_single_connection(scene: QGraphicsScene, node: dict, conn: dict, 
+                           positions: dict, config: dict):
+    source_id = str(node['id'])
+    target_id = str(conn['target'])
+    src_x, src_y = positions[source_id]
+    trg_x, trg_y = positions[target_id]
+    direction = conn.get('direction', 'down')
+
+    if node['type'] == 'if':
+        draw_branch_connection(scene, src_x, src_y, trg_x,
+                               trg_y, direction, config)
+    else:
+        draw_straight_connection(scene, src_x, src_y, trg_x, trg_y, config)
+
+
+def draw_branch_connection(scene: QGraphicsScene, src_x: float, src_y: float,
+                           trg_x: float, trg_y: float, direction: str, config: dict):
+    horizontal = 'right' if direction in ['right', 'right-down'] else 'left'
+    start_x = src_x + (config['NODE_WIDTH'] / 2 if horizontal ==
+                       'right' else -config['NODE_WIDTH'] / 2)
+    start_y = src_y + config['NODE_HEIGHT'] / 2
+
+    mid_x = start_x + (50 if horizontal == 'right' else -50)
+    mid_y = max(trg_y, src_y + 20)
+
+    path = QPainterPath()
+    path.moveTo(start_x, start_y)
+    path.lineTo(mid_x, start_y)
+    path.lineTo(mid_x, mid_y)
+    path.lineTo(trg_x, trg_y)
+
+    pen_color = QColor(
+        0, 150, 0) if horizontal == 'right' else QColor(150, 0, 0)
+    scene.addPath(path, QPen(pen_color, 2))
+
+
+def draw_straight_connection(scene: QGraphicsScene, src_x: float, src_y: float,
+                             trg_x: float, trg_y: float, config: dict):
+    line = QLineF(src_x, src_y + config['NODE_HEIGHT'], trg_x, trg_y)
+    scene.addLine(line, QPen(Qt.black, 2))
+
+# Главная функция
+
+
+def code_2_Graph(yaml_str: str, function_name: str = None) -> QGraphicsScene:
+    setup_logging()
+    config = get_config()
     scene = QGraphicsScene()
 
     try:
-        data = parse_yaml_code(s_code)
-        if not data or 'functions' not in data:
-            logging.error("Невалидные данные для визуализации")
+        data = parse_yaml(yaml_str)
+        if not data:
             return scene
 
-        function_name = function_name or next(iter(data['functions']))
-        func_data = data['functions'][function_name]
-        nodes = func_data.get('nodes', [])
+        # Выбор функции
+        functions = data['functions']
+        function_name = function_name or next(iter(functions))
+        nodes = functions[function_name].get('nodes', [])
 
-        # Проверка наличия узлов
         if not nodes:
-            logging.error("Нет узлов для отображения")
+            logging.error("No nodes to display")
             return scene
 
-        positions = calculate_node_positions(nodes)
+        # Расчет и отрисовка
+        positions = calculate_positions(nodes, config)
 
-        # Отрисовка элементов
         for node in nodes:
             node_id = str(node['id'])
-            if node_id not in positions:
-                logging.warning(f"Не найдена позиция для узла {node_id}")
-                continue
+            if node_id in positions:
+                draw_node(scene, node, positions[node_id], config)
 
-            try:
-                x, y = positions[node_id]
-                draw_node(scene, node, x, y)
-            except Exception as e:
-                logging.error(f"Ошибка при отрисовке узла {node_id}: {e}")
-
-        draw_connections(scene, nodes, positions)
+        draw_connections(scene, nodes, positions, config)
 
     except Exception as e:
-        logging.error(f"Ошибка визуализации: {str(e)}")
+        logging.error(f"Visualization error: {str(e)}")
 
     return scene

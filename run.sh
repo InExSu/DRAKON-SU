@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Проверка стиля кода
-flake8 drakon_SU.py
+flake8 a_Drakon_SU.py
 
 # Оптимизированная сборка приложения
 pyinstaller --clean --noconfirm --log-level=ERROR \

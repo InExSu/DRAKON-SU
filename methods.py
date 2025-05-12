@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QGraphicsView, QGraphicsScene,
                              QGraphicsRectItem, QGraphicsTextItem, QGraphicsLineItem,
                              QGraphicsPolygonItem, QStyle)
 from PyQt5.QtCore import QRectF, QPointF, Qt, QLineF
+
 import sys
 
 
@@ -94,43 +95,13 @@ def create_condition(x, y, size, text, scene):
     return diamond
 
 
-def create_main_window_OLD():
-    """Создает и настраивает главное окно приложения"""
-    window = QMainWindow()
-    window.setWindowTitle("DRAKON SU")
-    window.resize(800, 600)
-
-    # Создаем графическую сцену и представление
-    scene = QGraphicsScene()
-    view = QGraphicsView(scene)
-
-    # Настраиваем главный layout
-    main_layout = QVBoxLayout()
-    main_layout.addWidget(view)
-
-    # Создаем центральный виджет
-    central_widget = QWidget()
-    central_widget.setLayout(main_layout)
-    window.setCentralWidget(central_widget)
-
-    return window, scene
-
-
 def create_main_window():
     """Создает и настраивает главное окно приложения"""
     window = QMainWindow()
     window.setWindowTitle("DRAKON SU diagram")
     window.setGeometry(100, 100, 800, 600)
 
-    # Создание элементов интерфейса
-    toolbar = create_toolbar(window)
-    function_dock, filter_input, function_list = create_function_list(window)
-    scene, view = create_diagram_canvas(window)
-
-    # Настройка и отображение
-    setup_layout(window, toolbar, function_dock, view)
-
-    return window, scene
+    return window
 
 
 def code_Good(s_Code):
@@ -220,6 +191,7 @@ def setup_layout(window, toolbar, dock, view):
     window.addToolBar(Qt.LeftToolBarArea, toolbar)
     window.addDockWidget(Qt.RightDockWidgetArea, dock)
 
+
 def yaml_Validate(s_YAML: str) -> bool:
     # Проверяет валидность YAML-кода
     import yaml
@@ -229,27 +201,38 @@ def yaml_Validate(s_YAML: str) -> bool:
     except yaml.YAMLError:
         return False
 
+
 def file_New_Create():
     # TODO протестируй
     """Создает шаблон нового файла DRAKON в формате YAML"""
     s_Code = """
 header: |
-    # произвольный код
 functions:
-    simplex:
-        parameters: ""
-        returns: ""
-        nodes:
-        - id: 1 
-            type: "start"
-            text: "simplex"
-            connections: [2]
-        - id: 2 
-            type: "end"
-            text: "конец"
-            connections: []
+  - name: "reName"
+    params: ""
+    return_type: ""
+    icons:
+      - id: 1
+        type: "Header"
+        text: "reName"
+        connections:
+            right:
+                target: 2
+            down:
+                target: 4
+      - id: 2
+        type: "Params"
+        text: "n: int"
+        connections:
+            right:
+                target: 3
+      - id: 3
+        type: "Type"
+        text: "-> int"
+      - id: 4
+        type: "End"
+        text: "Конец"
 footer: |
-    # Код после функций.
 """
 
     # сохранить s_Code в файл
@@ -261,3 +244,50 @@ footer: |
         return s_File_Name
     else:
         return ""
+
+
+def commandLine_parse(s):
+    """Парсинг строки командной строки в словарь опций
+    Args:
+        s (str): Строка командной строки
+    Returns:
+        dict: Словарь {опция: значение}
+    """
+    import re
+    tokens = re.findall(r'(?:[^\s"]|"(?:\\.|[^"])*")+', s)
+    args = {}
+    i = 0
+    while i < len(tokens):
+        token = tokens[i]
+        # Обработка long опций (--option)
+        if token.startswith('--'):
+            key = token[2:]
+            if '=' in key:
+                key, val = key.split('=', 1)
+                args[key] = val.strip('"')
+            elif i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
+                args[key] = tokens[i + 1].strip('"')
+                i += 1
+            else:
+                args[key] = True
+        # Обработка short опций (-o)
+        elif token.startswith('-'):
+            key = token[1:]
+            if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
+                args[key] = tokens[i + 1].strip('"')
+                i += 1
+            else:
+                args[key] = True
+        i += 1
+    return args
+
+
+def options_FileName():
+    """Обработка опций командной строки"""
+
+    s_Options = " ".join(sys.argv[1:])
+    options = commandLine_parse(s_Options)
+
+    s_File_Name = options.get("file_open", "")
+
+    return s_File_Name
