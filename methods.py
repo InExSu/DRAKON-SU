@@ -153,7 +153,7 @@ def create_toolbar(window):
     return toolbar
 
 
-def create_function_list(window):
+def create_function_list(window, a1_Functions):
     """Создает список функций"""
     dock = QDockWidget("Функции", window)
     dock.setFeatures(QDockWidget.DockWidgetMovable |
@@ -167,7 +167,7 @@ def create_function_list(window):
     layout.addWidget(filter_input)
 
     function_list = QListWidget()
-    function_list.addItems(["header", "function_01", "function_02", "footer"])
+    function_list.addItems(a1_Functions)
     layout.addWidget(function_list)
 
     container.setLayout(layout)
@@ -291,3 +291,24 @@ def options_FileName():
     s_File_Name = options.get("file_open", "")
 
     return s_File_Name
+
+import yaml
+
+def yaml_Functions(s_Code):
+    """
+    Извлекает все имена функций из YAML-структуры.
+    
+    Args:
+        s_Code (str): YAML-строка с описанием функций
+        
+    Returns:
+        list: Список имен функций или пустой список при ошибке
+    """
+    try:
+        data = yaml.safe_load(s_Code)
+        if not isinstance(data, dict):
+            return []
+        return [func['name'] for func in data.get('functions', []) 
+                if isinstance(func, dict) and 'name' in func]
+    except (yaml.YAMLError, AttributeError):
+        return []

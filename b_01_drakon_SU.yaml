@@ -1,37 +1,39 @@
 header: |
-    # произвольный код
-    # любое колво строк
+  # произвольный код
+  # любое колво строк
 functions:
-    complex:
-        parameters: "text: str"
-        returns: "int"
-        nodes:
-          - id: 1
-            type: "start"
-            text: "complex"
-            connections: [2]
-          - id: 2
-            type: "if"
-            text: "text пустой?"
-            connections:
-              - label: "Да"
-                target: 3
-                direction: "right" # линия пойдёт из правого угла шестиугольника вправо
-              - label: "Нет"
-                target: 4 
-                direction: "down" # линия пойдёт из центра нижней линии шестиугольника вниз, там будет нужный узел
-          - id: 3
-            type: "action"
-            text: "b = False"
-            connections: [5]
-          - id: 4
-            type: "action"
-            text: "b = True"
-            connections: [5]
-          - id: 5 
-            type: "end"
-            text: "Конец"
-            connections: []
+  - name: complex
+    params: "text: str"
+    return_type: "int"
+    icons:
+      - id: 1
+        type: "start"
+        text: "complex"
+        connections: 
+          down:
+            target: 2
+      - id: 2
+        type: "if"
+        text: "text пустой?"
+        connections:
+          - label: "Да"
+            target: 3
+            direction: "right" # линия пойдёт из правого угла шестиугольника вправо
+          - label: "Нет"
+            target: 4
+            direction: "down" # линия пойдёт из центра нижней линии шестиугольника вниз, там будет нужный узел
+      - id: 3
+        type: "action"
+        text: "b = False"
+        connections: [5]
+      - id: 4
+        type: "action"
+        text: "b = True"
+        connections: [5]
+      - id: 5
+        type: "end"
+        text: "Конец"
+        connections: []
 footer: |
   # Код после функций. 
   # Любое колво строк.

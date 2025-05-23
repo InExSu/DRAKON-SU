@@ -93,9 +93,14 @@ def a_Main():
                 _next_item_ = 101
     
         elif _next_item_ == 101:
-            # Создание элементов интерфейса
+            # Панель инструментов
             toolbar = methods.create_toolbar(window)
-            function_dock, filter_input, function_list = methods.create_function_list(window)
+            
+            # Список функций
+            a1_Functions = methods.yaml_Functions(s_Code)
+            
+            function_dock, filter_input, function_list = methods.create_function_list(window, a1_Functions)
+            
             scene, view = methods.create_diagram_canvas(window)
             
             # Настройка и отображение
@@ -103,7 +108,14 @@ def a_Main():
             _next_item_ = 98
     
         elif _next_item_ == 98:
+            # TODO удалить 
             scene = a_YAML_2_Graph.code_2_Graph(s_Code)
+            
+            # TODO сделать
+            # s_Function_Name = взять имя функции из опция
+            # или листа функций
+            # s_Function_Code = yaml_Function_Code(s_Code, s_Function_Name) 
+            # scene = a_YAML_2_Graph.function_2_Graph()
             
             view = QGraphicsView(scene)
             
