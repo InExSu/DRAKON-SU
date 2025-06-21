@@ -1,0 +1,109 @@
+Timestamp           ,Function                       ,Level ,Message
+2025-06-21 18:35:02 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 19:09:46 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 19:09:46 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 19:36:37 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 19:36:37 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 19:36:37 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 19:38:13 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 19:38:13 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 19:38:13 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 19:44:20 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 19:44:20 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 19:44:20 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 19:45:05 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 19:45:05 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 19:45:05 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 19:45:05 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 19:53:51 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 19:53:51 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 19:53:51 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 19:53:51 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 19:53:57 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 19:53:57 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 20:52:05 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 20:52:05 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 20:52:05 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 20:52:05 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 20:52:07 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 20:52:07 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 20:53:00 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 20:53:00 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 20:53:00 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 20:53:00 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 20:53:07 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 20:53:07 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 20:54:11 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 20:54:11 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 20:54:11 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 20:54:11 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 20:54:20 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 20:54:20 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 21:01:03 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 21:01:03 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 21:01:03 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 21:01:03 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 21:01:05 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 21:01:05 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 21:01:05 ,a_Main                         ,INFO  ,Liana: Users actions
+2025-06-21 21:09:17 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 21:09:17 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 21:09:17 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 21:09:17 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 21:09:29 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 21:09:29 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 21:09:29 ,a_Main                         ,INFO  ,Liana: Users actions
+2025-06-21 21:09:53 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 21:09:53 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 21:09:53 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 21:09:53 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 21:10:04 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 21:10:04 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 21:11:20 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 21:11:20 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 21:11:20 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 21:11:20 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 21:12:45 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 21:12:45 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 21:12:45 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 21:12:45 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 21:12:45 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 21:12:45 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 21:12:57 ,a_Main                         ,INFO  ,Liana: Users actions
+2025-06-21 21:13:32 ,a_Main                         ,INFO  ,Liana: Start
+2025-06-21 21:13:32 ,a_Main                         ,INFO  ,Liana: Command line arguments
+2025-06-21 21:13:32 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Start
+2025-06-21 21:13:32 ,diagram_Code_From_Command_Line ,INFO  ,Liana: Arguments not found
+2025-06-21 21:13:32 ,a_Main                         ,INFO  ,Liana: primitive
+2025-06-21 21:13:32 ,a_Main                         ,INFO  ,Liana: Diagram show
+2025-06-21 21:13:34 ,a_Main                         ,INFO  ,Liana: Users actions
+2025-06-21 21:34:01,a_Main,INFO,Liana: Start
+2025-06-21 21:34:01,a_Main,INFO,Liana: Command line arguments
+2025-06-21 21:34:01,diagram_Code_From_Command_Line,INFO,Liana: Start
+2025-06-21 21:34:01,diagram_Code_From_Command_Line,INFO,Liana: Arguments not found
+2025-06-21 21:34:01,a_Main,INFO,Liana: primitive
+2025-06-21 21:34:01,a_Main,INFO,Liana: Diagram show
+2025-06-21 21:34:06,a_Main,INFO,Liana: Users actions
+2025-06-21 21:34:34,a_Main,INFO,Liana: Start
+2025-06-21 21:34:34,a_Main,INFO,Liana: Command line arguments
+2025-06-21 21:34:34,diagram_Code_From_Command_Line,INFO,Liana: Start
+2025-06-21 21:34:34,diagram_Code_From_Command_Line,INFO,Liana: Arguments not found
+2025-06-21 21:34:34,a_Main,INFO,Liana: primitive
+2025-06-21 21:34:34,a_Main,INFO,Liana: Diagram show
+2025-06-21 21:34:34,a_Main,INFO,Liana: Users actions
+2025-06-21 23:03:26,a_Main,INFO,Liana: Start
+2025-06-21 23:03:26,a_Main,INFO,Liana: Command line arguments
+2025-06-21 23:03:26,diagram_Code_From_Command_Line,INFO,Liana: Start
+2025-06-21 23:03:26,diagram_Code_From_Command_Line,INFO,Liana: Arguments not found
+2025-06-21 23:03:26,a_Main,INFO,Liana: primitive
+2025-06-21 23:03:26,a_Main,INFO,Liana: Diagram show
+2025-06-21 23:03:26,a_Main,INFO,Liana: Users actions
+2025-06-21 23:03:26,user_Actions,INFO,Liana: Start
+2025-06-21 23:06:39,a_Main,INFO,Liana: Start
+2025-06-21 23:06:39,a_Main,INFO,Liana: Command line arguments
+2025-06-21 23:06:39,diagram_Code_From_Command_Line,INFO,Liana: Start
+2025-06-21 23:06:39,diagram_Code_From_Command_Line,INFO,Liana: Arguments not found
+2025-06-21 23:06:39,a_Main,INFO,Liana: primitive
+2025-06-21 23:06:39,a_Main,INFO,Liana: Diagram show
+2025-06-21 23:06:39,a_Main,INFO,Liana: Users actions
+2025-06-21 23:06:39,user_Actions,INFO,Liana: Start

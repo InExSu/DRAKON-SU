@@ -1,0 +1,10 @@
+
+        digraph drakon_diagram {
+            rankdir=TB;
+
+            node_1 [label="Начало", shape=ellipse, fillcolor="#4C8BF5", style=filled, fontcolor=white];
+            node_2 [label="Конец", shape=ellipse, fillcolor="#4C8BF5", style=filled, fontcolor=white];
+
+            node_1 -> node_2;
+        }
+        
