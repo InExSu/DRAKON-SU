@@ -1,0 +1,28 @@
+
+header: |
+functions:
+  - name: "reName"
+    params: ""
+    return_type: ""
+    icons:
+      - id: 1
+        type: "Header"
+        text: "reName"
+        connections:
+            right:
+                target: 2
+            down:
+                target: 4
+      - id: 2
+        type: "Params"
+        text: "n: int"
+        connections:
+            right:
+                target: 3
+      - id: 3
+        type: "Type"
+        text: "-> int"
+      - id: 4
+        type: "End"
+        text: "Конец"
+footer: |

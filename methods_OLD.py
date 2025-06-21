@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QGraphicsView, QGraphicsScene,
                              QGraphicsRectItem, QGraphicsTextItem, QGraphicsLineItem,
                              QGraphicsPolygonItem, QStyle)
 from PyQt5.QtCore import QRectF, QPointF, Qt, QLineF
-
+from PyQt5.QtWidgets import QFileDialog
 import sys
 
 
@@ -237,7 +237,7 @@ footer: |
 
     # сохранить s_Code в файл
     s_File_Name = QFileDialog.getSaveFileName(
-        dialog, "Сохранить файл", "", "DRAKON Files (*.drakon)")[0]
+        None, "Сохранить файл", "", "DRAKON Files (*.drakon)")[0]
     if s_File_Name:
         with open(s_File_Name, "w") as file:
             file.write(s_Code)

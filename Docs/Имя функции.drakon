@@ -1,0 +1,22 @@
+{
+    "items": {
+        "1": {
+            "type": "end"
+        },
+        "2": {
+            "type": "branch",
+            "branchId": 1,
+            "one": "3",
+            "content": "<p>Состояние 1</p>"
+        },
+        "3": {
+            "type": "branch",
+            "content": "Завершение",
+            "one": "1",
+            "branchId": 2
+        }
+    },
+    "type": "drakon",
+    "id": "States_Users_Action_Proccessing.drakon",
+    "params": "<p>Признак языка</p><p>Аргументы</p>"
+}
