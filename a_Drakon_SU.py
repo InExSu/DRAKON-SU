@@ -6,6 +6,7 @@ import sys
 import os
 import a_YAML_2_Graph
 import a_Methods as m
+import a_PyQt5_FSM   as qt
 
 if sys.platform == 'win32':
     # Windows-specific adjustments
@@ -40,7 +41,8 @@ def a_Main():
             #item 172
             m.log_2_CSV("Liana: Diagram show")
             #item 143
-            state = m.diagram_Show( \
+            state = qt.diagram_Show( \
+            		s_File_Name,
             		s_Diagram_Code)
             #item 163
             if state:
@@ -71,7 +73,8 @@ def a_Main():
             #item 172
             m.log_2_CSV("Liana: Diagram show")
             #item 143
-            state = m.diagram_Show( \
+            state = qt.diagram_Show( \
+            		s_File_Name,
             		s_Diagram_Code)
             #item 163
             if state:
@@ -103,7 +106,8 @@ def a_Main():
                 #item 172
                 m.log_2_CSV("Liana: Diagram show")
                 #item 143
-                state = m.diagram_Show( \
+                state = qt.diagram_Show( \
+                		s_File_Name,
                 		s_Diagram_Code)
                 #item 163
                 if state:

@@ -1,0 +1,18 @@
+{
+    "items": {
+        "item1": {
+            "type": "start",
+            "content": "Начало",
+            "x": 100,
+            "y": 50
+        },
+        "item2": {
+            "type": "process",
+            "content": "Вычисления"
+        },
+        "item3": {
+            "type": "end",
+            "content": "Конец"
+        }
+    }
+}

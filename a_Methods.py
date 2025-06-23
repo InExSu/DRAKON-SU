@@ -193,32 +193,15 @@ def file_Check(s_File_Name):
     # Проверяем, существует ли файл
     file_exists = os.path.isfile(s_File_Name)
 
-def diagram_Show(s_DOT_Code):
-    """
-    Отображает диаграмму на основе строки с DOT-кодом.
 
-    :param s_DOT_Code: строка с DOT-описанием графа
-    """
-    try:
-        # Создаем объект графа из переданного DOT-кода
-        src = Source(s_DOT_Code)
-
-        # Генерируем изображение и отображаем его
-        src.view()
-        
-        return True
     
-    except Exception as e:
-        print(f"[Ошибка] Не удалось отобразить диаграмму: {e}")
-        return False
-    
-def wait_for_keypress(a1_Keys):
-    """
-    Ждёт нажатия клавиши и возвращает её имя.
-    """
-    while True:
-        event = keyboard.read_event()
-        if event.event_type == keyboard.KEY_DOWN:
-            key = event.name.lower()
-            if key in a1_Keys:
-                return key
+# def wait_for_keypress(a1_Keys):
+#     """
+#     Ждёт нажатия клавиши и возвращает её имя.
+#     """
+#     while True:
+#         event = keyboard.read_event()
+#         if event.event_type == keyboard.KEY_DOWN:
+#             key = event.name.lower()
+#             if key in a1_Keys:
+#                 return key
